@@ -1,0 +1,243 @@
+■gitのローカルリポジトリを作成し、ファイルを登録する。
+(1)ローカルレポジトリを作成する前に以下のコマンドにてグローバル初期設定を実行しておく。
+(a)ユーザ名を登録する。
+ 構文     $ git config --global user.name 'username' 
+ 自ユーザ $ git config --global user.name 'Takashi-Crescent'
+
+(b)メールアドレスを登録しておく。
+ 構文     $ git config --global user.email 'username@example.com'
+ 自ユーザ $ git config --global user.email' takashi.crescent@gmail.com'
+
+(c)コアエディタを登録しておく。
+ 下記コマンドを発行する前に、ファイルエンコーディングの環境変数を設定しておくこと。但し、Windowsの場合はmsysでBashコンソールにて実行。
+ $ set fileencodings=utf-8
+ 構文     $ git config --global core.editor 'code --wait'
+ 自ユーザ $ git config --global core.editor "'C:\Users\USER\OneDrive\Tools\Sakura_Editor\Unicode\sakura2-3-2-0\sakura.exe' -code=4"
+
+(d)マージツールを登録しておく。
+ 構文     $ git config --global merge.tool 'code --wait "$MERGED"
+ 自ユーザ $ git config --global merge.tool winmerge
+
+ 但し、VSCodeで対応する場合は以下のコマンドを追加する。上記はwinmergeで対応している。
+ 構文     $git config --global merge.tool vscode
+          $git config --global mergetool.vscode.cmd 'code --wait $MERGED'
+
+*ここは後で記載することとする。
+
+(e)
+$ git config --global push.default simple
+(f)
+$ git config --global pull.rebase false
+(g)
+$ git config --global core.quotepath false
+(h)登録内容を確認する。
+$ git config --global --list
+
+
+(2)Gitで管理するプロジェクトファイルを作成する。
+(a)プロジェクトのリポジトリとなるフォルダを新規作成する。
+ 構文     $ mkdir  -p '任意のフォルダ'
+ 自ユーザ $ mkdir -p '/c/Users/USER/WORK/git-repositories/test_20260426'
+
+(b)(a)で新規作成したフォルダ下に移動し、リポジトリの初期化を行う。
+ 構文     $ cd '任意のフォルダ'; git 
+          $git init
+ 自ユーザ $ cd '/c/Users/USER/WORK/git-repositories/test_20260426'
+          $git init
+
+ リポジトリの初期化とともに、{カレント}/.git/ディレクトリ(隠しフォルダ)が作成されます。
+
+(c)新規ファイルを作成してgit管理下に置く。
+ 1)$ touch hello.txt  → 0バイトのファイルを作成します。
+ 2)$ git status → 現在のリポジトリ内のステータス状況を確認します。
+ 3)$ git add hello.txt → 新規作成したファイルをステージングに追加します。
+
+   *複数ファイルの変更をステージ環境に反映する場合は、ワイルドカードを使用することができます。
+   $ git add '*.txt'
+
+ 4)$ git commit -m 'First Commit.' → ステージングにあるファイルをローカルリポジトリに追加する。
+   * -m "◯◯◯◯◯" でコミット時のコメントを登録できる。
+     -mを付けないと(1)(c)で登録したコアエディタでのコメント入力を求められる。
+     いずれにしてもコメントを登録しないとコミットできない。
+
+
+■gitのリモートリポジトリを作成し、ファイルを登録する。
+(1)リモートリポジトリを作成する。
+ GitHubのWebサイト(https://github.com/)にサインインし、同期するリポジトリを作成する。アカウントはあらかじめ作成しておく。
+ ここではHelloWorldというリポジトリ名としておく。
+
+(2)リモートリポジトリURLをgitコマンドで登録する。
+ 構文     $ git add <リモートリポジトリ名> <リモートリポジトリURL>
+ 自ユーザ $ git add origin https://github.com/Takashi-Crescent/PJTEST20260426/
+
+(3)ローカルリポジトリのファイルをリモートリポジトリにPush(アップロード)します。
+ 構文     $ git push -u origin master
+ 自ユーザ $ git push -u origin master   → MSYSのBashコンソールで登録する場合はmasterとする。
+          $ git push -u origin main     → VSCodeで登録する場合はmainにする。
+
+(4)リモートリポジトリでコミット内容を確認してみる。
+ WebブラウザでGitHubのWebサイトにある管理コンソールから下記のURLの内容確認することで同期しているか確認できる。
+ https://github.com/Takashi-Crescent/PJTEST20260426/ 
+ 
+ 
+■gitで新規ファイル/ディレクトリを追加する。
+(1) $ git add hello_01.txt → hello?01.txtを追加する。
+(2) $ git add WORK → WORKというディレクトリごと追加する。
+(3) $ git add . → カレントディレクトリごと追加する。
+
+■gitで管理下におくファイルの登録を確定する。上記のgit addの確定コマンド。
+(1) $ git commit -m " hello_01.txt追加しました。"
+(2) $ git commit -m " WORKディレクトリを追加しました。"
+(3) $ git commit -m "カレントディレクトリを追加しました。"
+
+■新規ファイル/ディレクトリのGit管理からの追加(git add)を取り消す。
+git rm --cachedを使うと、リポジトリからはファイルを削除するが、作業ツリーにはファイルを残すことができる。
+間違ってGit管理下にあげてしまったからGit管理対象からは外したいが、ファイルは残したいというような場合に使う。
+(1) $ git rm --cached hello_01.txt  → hello_01.txtのみをGit管理から取り消す。
+(2) $ git rm --cached -r WORK  → WORKディレクトリ下を全てをGit管理から取り消す。
+(3) $ git rm --cached -r .   → カレントディレクトリ下を全てをGit管理から取り消す。
+
+■新規ファイル/ディレクトリのGit管理からの追加(git add)を取り消すだけではなくファイル実体も削除する。
+git rmを使うと、指定したファイルが完全に削除されるので、リポジトリだけではなく、作業ツリーからも削除される。
+つまり、ファイル（やディレクトリ）がもういらなくなったというときにgit rmを使う。
+(1) $ git rm hello_01.txt  → hello_01.txtのみをGit管理から取り消すだけでなく、ファイル実体も削除する。
+(2) $ git rm -r WORK  → WORKディレクトリ下を全てをGit管理から取り消すだけでなく、ファイル実体も削除する。
+(3) $ git rm -r .   → カレントディレクトリ下を全てをGit管理から取り消すだけでなく、ファイル実体も削除する。
+
+■git commitを取り消す。
+(1)直前のコミットを取り消す。
+$ git reset --soft HEAD^
+$ git reset --soft HEAD@{1}
+
+HEAD^またはHEAD~``@^：直前のコミットを指す。
+
+(2)3個前のコミットを取り消す。
+$ git reset --soft HEAD~{3}
+HEAD~{n}：n個前のコミットを指す。
+
+--soft：インデックス・作業ツリーはそのままで、コミットのみ取り消し。
+        コミットのみ取り消し(HEADの位置のみ修正される)となる。
+　      このコマンドを実行すると、まさに「コミットをする直前」の状態に戻せる。
+　      作業ディレクトリとステージングエリアはそのままである。
+　      まとめてコミットしたかったのに1つしかコミットしていなかった、まだ作業中なのにコミットしてしまった
+        といった場合に便利である。
+--hard：インデックス・作業ツリーはコミットの一つ前の状態に戻した上でコミットを取り消し。
+        全部を取り消し（HEADの位置・インデックス・作業ツリーが修正される）もっとも強力なオプションである。
+　      ステージングエリアにも作業ディレクトリにも残したくないといった場合に使用します。
+--mixedもしくはオプションなし:commitとaddの取り消し（HEADの位置・インデックスが修正される）。
+　                            HEADと一緒にステージが巻き戻せる。
+                              git addでステージしたけど、やっぱり戻したいというときに便利である。
+                              作業ディレクトリのファイルは削除しない。
+
+(3)コミットの取り消し
+$ git revert ${コミットのハッシュ値}
+
+revertは指定したコミットと逆の内容をコミットする。ちなみにrevertは「元に戻す」という意味である。
+revertを使うには、打ち消したいコミットのハッシュ値を確認する必要がある。
+git logコマンドを使用して該当コミットのハッシュ値を確認し、git revertで指定したコミット時点の状態まで作業ツリーを戻す。
+また、git revertを使用してもコミットはなかったことにならず、「逆向きのコミット」の履歴が残る。
+つまり、履歴を改変することなく、新しく「revertしたコミット」が追加されるので、pushした後でも安心して使用できる。
+もし間違えてrevertしたとしても、もう一度revertし直せば問題ない。
+
+■直前のコミットログの変更
+$ git commit --amend で直前のコミットログを修正できる。
+このコマンドできることは以下の2つである。
+
+(1)コミットメッセージの修正
+ コミットした後でコミットメッセージに誤字を発見したり、「もう少しわかりやすく書き直したいな」と思うこともある。
+ そんなときは以下のようにする。
+ $ git add A
+ $ git commit -m "誤字を含むコミット"
+ [master (root-commit) 7033548] 誤字を含むコミット
+  1 file changed, 1 insertion(+)
+  create mode 100644 A
+ $ git log --oneline
+ 7033548 (HEAD -> master) 誤字を含むコミット
+ $ git commit --amend -m "修正されたコミット"
+ [master 6fd014d] 修正されたコミット
+  Date: Fri Nov 8 17:00:03 2019 +0900
+  1 file changed, 1 insertion(+)
+  create mode 100644 A
+ $ git log --oneline
+ 6fd014d (HEAD -> master) 修正されたコミット
+
+(2)コミット内容を後から追加
+ ・コミット後に追加で修正を行った
+ ・git addし忘れたファイルがあった
+ ・一時コミットを残したくない
+ といった時にもgit commit --amendが活躍する。 
+ 以下は「ファイルA、Bを修正したが、Aをgit addし忘れた」といった場合の例である。
+ $ git add B
+ $ git commit -m "AとBを修正"
+ [master db4514a] AとBを修正
+  1 file changed, 1 insertion(+)
+ $ git status
+ ブランチ master
+ Changes not staged for commit:
+   (use "git add <file>..." to update what will be committed)
+   (use "git checkout -- <file>..." to discard changes in working directory)
+ 
+          modified:   A
+ 
+ no changes added to commit (use "git add" and/or "git commit -a")
+ $ git add A
+ $ git commit --amend --no-edit
+ [master 0469077] AとBを修正
+  Date: Fri Nov 8 17:31:15 2019 +0900
+  2 files changed, 2 insertions(+), 1 deletion(-)
+
+この例では、--no-editオプションを使い前回のコミットメッセージのままコミットしている。このオプションを外せば前節と同様コミットメッセージの変更も可能である。
+
+■gitログを見やすくする。
+以下のコマンドを発行するとコミットログがカラフルになる。
+$ git log --pretty='format:%C(yellow)%h %C(green)%cd %C(reset)%s %C(red)%d %C(cyan)[%an]' --date=iso
+
+Linux版は~/.gitconfigファイル、Windows版は.git/configファイルに以下を追加する。
+[alias]
+    plog = log --pretty='format:%C(yellow)%h %C(green)%cd %C(reset)%s %C(red)%d %C(cyan)[%an]' --date=iso
+
+そうするとbashのコマンドラインからgitのオプションとして以下の様に利用できる。
+$ git plog --all
+$ git plog --all --oneline --graph
+
+■git diffで変更差分を確認する。
+(1)git diff
+  git diffは、「作業ツリー」と「ステージングエリア(インデックス)」の間の差分を確認することができる。
+  つまり、git addする前に差分を確認するためのコマンドである。
+  特定のファイルの差分を確認したい場合は、git diffの後に確認したいファイル名を記述する。
+  $ git diff
+  $ git diff <ファイル名>
+
+(2)git diff --staged または git diff --cached
+  git diff --stagedとすると、「ステージングエリア」と「ローカルリポジトリ」の間の差分を確認することができます。
+  つまり、git addした後、git commitする前に差分を確認するためのコマンドである。
+  git diff --cachedを使っても同じ結果になりる。
+  $ git diff --staged
+  $ git diff --cached
+
+■gitの用語
+Gitの作業ツリー（ワークツリー）は実際にファイルを編集・作成する作業場所であり、
+インデックス（ステージングエリア）は次回のコミット（履歴記録）のために変更を一時保存・整理する中間スペースである。
+git addでツリーからインデックスへ、git commitでインデックスからリポジトリへ登録する。
+
+(1) 作業ツリー (Working Tree / Working Directory)
+   定義: あなたが今、実際にファイルを開いて編集しているファイルシステム上の場所。
+   役割: コードの追加、削除、変更などを行う場所。
+   状態: 変更しただけではGitは内容を把握していない（未追跡または追跡中）。
+
+(2) インデックス (Index / Staging Area)
+   定義: ワークツリーとリポジトリの間にある、一時的な保存場所。
+   別名: 「ステージングエリア」や「キャッシュ」とも呼ばれます。
+   役割: 次のコミットに含めたい変更だけを、この場所に事前に「予約（ステージング）」します。
+
+(3) 両者の関係と操作フロー
+   編集: ワークツリーでファイルを修正する。
+   ステージング: git add <ファイル名>`で、その修正をインデックスに登録する。
+   コミット: git commit -m "メッセージ"`で、インデックスにある内容を正式にリポジトリへ保存する。
+
+(4) 主なコマンドによる違いの確認
+   git status`: ワークツリーの変更状況と、インデックスへ登録されている（ステージングされた）かを表示する。
+   git diff`: ワークツリーとインデックスの差分を表示（未addの修正）。
+   git diff --cached`: インデックスと最新コミット(HEAD)の差分を表示（add済みだがコミット前）
+
+これらを使い分けることで、不要なファイルをコミットから除外したり、変更の一部だけをコミットしたりすることができる。

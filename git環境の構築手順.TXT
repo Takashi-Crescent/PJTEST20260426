@@ -1,0 +1,82 @@
+■gitのローカルリポジトリを作成し、ファイルを登録する。
+(1)ローカルレポジトリを作成する前に以下のコマンドにてグローバル初期設定を実行しておく。
+(a)ユーザ名を登録する。
+ 構文     $ git config --global user.name 'username' 
+ 自ユーザ $ git config --global user.name 'Takashi-Crescent'
+
+(b)メールアドレスを登録しておく。
+ 構文     $ git config --global user.email 'username@example.com'
+ 自ユーザ $ git config --global user.email' takashi.crescent@gmail.com'
+
+(c)コアエディタを登録しておく。
+ 下記コマンドを発行する前に、ファイルエンコーディングの環境変数を設定しておくこと。但し、Windowsの場合はmsysでBashコンソールにて実行。
+ $ set fileencodings=utf-8
+ 構文     $ git config --global core.editor 'code --wait'
+ 自ユーザ $ git config --global core.editor "'C:\Users\USER\OneDrive\Tools\Sakura_Editor\Unicode\sakura2-3-2-0\sakura.exe' -code=4"
+
+(d)マージツールを登録しておく。
+ 構文     $ git config --global merge.tool 'code --wait "$MERGED"
+ 自ユーザ $ git config --global merge.tool winmerge
+
+ 但し、VSCodeで対応する場合は以下のコマンドを追加する。上記はwinmergeで対応している。
+ 構文     $git config --global merge.tool vscode
+          $git config --global mergetool.vscode.cmd 'code --wait $MERGED'
+
+*ここは後で記載することとする。
+
+(e)
+$ git config --global push.default simple
+(f)
+$ git config --global pull.rebase false
+(g)
+$ git config --global core.quotepath false
+(h)登録内容を確認する。
+$ git config --global --list
+
+
+(2)Gitで管理するプロジェクトファイルを作成する。
+(a)プロジェクトのリポジトリとなるフォルダを新規作成する。
+ 構文     $ mkdir  -p '任意のフォルダ'
+ 自ユーザ $ mkdir -p '/c/Users/USER/WORK/git-repositories/test_20260426'
+
+(b)(a)で新規作成したフォルダ下に移動し、リポジトリの初期化を行う。
+ 構文     $ cd '任意のフォルダ'; git 
+          $git init
+ 自ユーザ $ cd '/c/Users/USER/WORK/git-repositories/test_20260426'
+          $git init
+
+ リポジトリの初期化とともに、{カレント}/.git/ディレクトリ(隠しフォルダ)が作成されます。
+
+(c)新規ファイルを作成してgit管理下に置く。
+ 1)$ touch hello.txt  → 0バイトのファイルを作成します。
+ 2)$ git status → 現在のリポジトリ内のステータス状況を確認します。
+ 3)$ git add hello.txt → 新規作成したファイルをステージングに追加します。
+
+   *複数ファイルの変更をステージ環境に反映する場合は、ワイルドカードを使用することができます。
+   $ git add '*.txt'
+
+ 4)$ git commit -m 'First Commit.' → ステージングにあるファイルをローカルリポジトリに追加する。
+   * -m "◯◯◯◯◯" でコミット時のコメントを登録できる。
+     -mを付けないと(1)(c)で登録したコアエディタでのコメント入力を求められる。
+     いずれにしてもコメントを登録しないとコミットできない。
+
+
+■gitのリモートリポジトリを作成し、ファイルを登録する。
+(1)リモートリポジトリを作成する。
+ GitHubのWebサイト(https://github.com/)にサインインし、同期するリポジトリを作成する。アカウントはあらかじめ作成しておく。
+ ここではHelloWorldというリポジトリ名としておく。
+
+(2)リモートリポジトリURLをgitコマンドで登録する。
+ 構文     $ git add <リモートリポジトリ名> <リモートリポジトリURL>
+ 自ユーザ $ git add origin https://github.com/Takashi-Crescent/PJTEST20260426/
+
+(3)ローカルリポジトリのファイルをリモートリポジトリにPush(アップロード)します。
+ 構文     $ git push -u origin master
+ 自ユーザ $ git push -u origin master   → MSYSのBashコンソールで登録する場合はmasterとする。
+          $ git push -u origin main     → VSCodeで登録する場合はmainにする。
+
+(4)リモートリポジトリでコミット内容を確認してみる。
+ WebブラウザでGitHubのWebサイトにある管理コンソールから下記のURLの内容確認することで同期しているか確認できる。
+ https://github.com/Takashi-Crescent/PJTEST20260426/ 
+ 
+ 

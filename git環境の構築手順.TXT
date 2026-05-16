@@ -263,4 +263,4 @@ origin, origin/master, masterの違いがわかるようになること。
 
 〇origin, origin/master, masterの違い
 (1)リポジトリ:	リモートリポジトリ（origin），ローカルリポジトリの2つしかない。
-(2)ブランチ:	この例では各リポジトリにmaster，developmentの2つを作成している。
+(2)ブランチ:	この例では各リポジトリにmaster，developmentの2つを作成している。 
